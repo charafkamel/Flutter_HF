@@ -22,22 +22,28 @@ class ListBloc extends Bloc<ListEvent, ListState> {
   
   ListBloc() : super(ListInitial()) {
     on<ListLoadEvent>((event, emit) async {
+      if(state is! ListLoading){
         emit(ListLoading());
         try {
-          List<UserItem>? users = await loadUsers();
+          List? users = await loadUsers();
           if(users != null) {
-            emit(ListLoaded(users));
+            emit(ListLoaded(users as List<UserItem>));
+          }
+          else{
+            List<UserItem> users2 = [];
+             emit(ListLoaded(users2));
           }
           } 
           on ListException catch (e) {
             emit(ListError(e.message));
         }
     
-  
+  }
     });
+  
   }
   
-  Future<List<UserItem>?> loadUsers() async {
+  Future<List<dynamic>?> loadUsers() async {
     String? token = GetIt.I<MyToken>().token;
   try {
     final dio = GetIt.I<Dio>();
@@ -45,9 +51,8 @@ class ListBloc extends Bloc<ListEvent, ListState> {
       final Response response = await dio.get(
         '/users',
       );
-    return response.data.map((item) => UserItem(item['name'], item['avatarUrl'])).toList();
+    return (response.data as List).map((item) => UserItem(item['name'], item['avatarUrl'])).toList();
   } catch(e) {
-    // Data does not exist, handle the error
     if (e is DioException) {
         throw ListException(e.response!.data['message'] as String);
       } else {

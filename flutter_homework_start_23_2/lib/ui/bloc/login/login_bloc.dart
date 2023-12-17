@@ -27,7 +27,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         GetIt.I<MyToken>().setToken(token);
         emit(LoginSuccess());
       }
-   
+      else{
+        emit(LoginForm());
+      }
     });
 
     on<LoginSubmitEvent>((event, emit) async {
@@ -53,6 +55,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         if (passwordErrorText != null){
           GetIt.I<EmailPass>().setPass(passwordErrorText);
         }
+        emit(LoginForm());
       }
         
       }
@@ -88,12 +91,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     Future<void> saveTokenToSharedPreferences(String token) async {
       await GetIt.I<SharedPreferences>().setString('token', token);
     }
-
-String? validateEmail(String email, String password) {
-  
-  String? passwordErrorText = _isValidPassword(password);
-
-}
 
 String? _isValidEmail(String email) {
   if (email.isEmpty) {
