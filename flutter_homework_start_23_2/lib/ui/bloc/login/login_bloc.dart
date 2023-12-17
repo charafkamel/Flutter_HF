@@ -19,8 +19,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
 
   LoginBloc() : super(LoginForm()) {
-    GetIt.I<EmailPass>().setEmail(null);
-      GetIt.I<EmailPass>().setPass(null);
+
     on<LoginAutoLoginEvent>((event, emit) async {
       String? token = GetIt.I<SharedPreferences>().getString('token');
       if(token != null){

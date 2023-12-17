@@ -22,19 +22,14 @@ class _LoginPageBlocState extends State<LoginPageBloc> {
   @override
   void initState() {
   super.initState();
-  _init();
-}
-
-void _init() async {
-    BlocProvider.of<LoginBloc>(context).add(LoginAutoLoginEvent());
+  BlocProvider.of<LoginBloc>(context).add(LoginAutoLoginEvent());
 }
 
 
 
   @override
   Widget build(BuildContext context) {
-    return 
-      BlocConsumer<LoginBloc, LoginState>(
+    return BlocConsumer<LoginBloc, LoginState>(
         listener: (context, state) {
           if (state is LoginError) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -47,7 +42,6 @@ void _init() async {
         },
         
         builder: (context, state) {
-          
           return Scaffold(
             appBar: AppBar(
               title: const Text('Login Page'),
