@@ -63,7 +63,6 @@ void main() {
           }
 
           testWidgets('Error field is shown, clears on change', (tester) async {
-            print("2");
             await tester.pumpWidget(const MyApp());
             await tester.pumpAndSettle();
             await tester.enterText(find.byType(TextField).first, email);

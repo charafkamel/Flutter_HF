@@ -27,42 +27,41 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         GetIt.I<MyToken>().setToken(token);
         emit(LoginSuccess());
       }
-      else{
-        emit(LoginForm());
-      }
     });
 
     on<LoginSubmitEvent>((event, emit) async {
-      emit(LoginLoading());
-      GetIt.I<EmailPass>().setEmail(null);
-      GetIt.I<EmailPass>().setPass(null);
-      try {
-        String? emailErrorText = _isValidEmail(event.props[0].toString());
-        String? passwordErrorText = _isValidPassword(event.props[1].toString());
-       if (emailErrorText == null && passwordErrorText == null) {
-        String token = await login(event.email, event.password);
-        if (event.props[2] == true) {
-            await saveTokenToSharedPreferences(token); 
+      if(state is! LoginLoading){
+        emit(LoginLoading());
+        GetIt.I<EmailPass>().setEmail(null);
+        GetIt.I<EmailPass>().setPass(null);
+        try {
+          String? emailErrorText = _isValidEmail(event.props[0].toString());
+          String? passwordErrorText = _isValidPassword(event.props[1].toString());
+        if (emailErrorText == null && passwordErrorText == null) {
+          String token = await login(event.email, event.password);
+          if (event.props[2] == true) {
+              await saveTokenToSharedPreferences(token); 
+          }
+          GetIt.I<MyToken>().setToken(token);
+          emit(LoginSuccess());
+          emit(LoginForm());
         }
-        GetIt.I<MyToken>().setToken(token);
-        emit(LoginSuccess());
-        emit(LoginForm());
-      }
-      else{
-        if (emailErrorText != null){
-          GetIt.I<EmailPass>().setEmail(emailErrorText);
+        else{
+          if (emailErrorText != null){
+            GetIt.I<EmailPass>().setEmail(emailErrorText);
+          }
+          if (passwordErrorText != null){
+            GetIt.I<EmailPass>().setPass(passwordErrorText);
+          }
+          emit(LoginForm());
         }
-        if (passwordErrorText != null){
-          GetIt.I<EmailPass>().setPass(passwordErrorText);
+          
         }
-        emit(LoginForm());
+        on LoginException catch (e) {        
+          emit(LoginError(e.message));
+          emit(LoginForm());
       }
-        
-      }
-      on LoginException catch (e) {        
-        emit(LoginError(e.message));
-        emit(LoginForm());
-    }
+  }
   });
   }
   

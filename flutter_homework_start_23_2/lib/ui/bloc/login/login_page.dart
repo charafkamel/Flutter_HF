@@ -35,7 +35,6 @@ void _init() async {
   Widget build(BuildContext context) {
     return 
       BlocConsumer<LoginBloc, LoginState>(
-        
         listener: (context, state) {
           if (state is LoginError) {
             ScaffoldMessenger.of(context).showSnackBar(

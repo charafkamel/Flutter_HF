@@ -61,7 +61,10 @@ class MyApp extends StatelessWidget {
               create: (context) => LoginBloc(),
               child: const LoginPageBloc(),
             ),
-        '/list': (context) => ListPageBloc(),
+        '/list': (context) => BlocProvider(
+              create: (context) => ListBloc(),
+              child: const ListPageBloc(),
+            ),
       }
     );
   }

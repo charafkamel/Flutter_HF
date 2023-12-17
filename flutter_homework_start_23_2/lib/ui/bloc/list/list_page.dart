@@ -24,6 +24,7 @@ class _ListPageBlocState extends State<ListPageBloc> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: AppBar(
         title: Text('User List'),
